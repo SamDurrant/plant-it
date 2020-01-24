@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { connect } from 'react-redux';
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
 
 // Components
 import GoalList from '../goals/GoalList';
@@ -35,4 +38,13 @@ class Dashboard extends Component {
   }
 }
 
-export default withStyles(styles)(Dashboard);
+const mapStateToProps = state => ({
+  goals: state.firestore.ordered.goals
+})
+
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([
+    { collection: 'goals'}
+  ])
+)(withStyles(styles)(Dashboard));

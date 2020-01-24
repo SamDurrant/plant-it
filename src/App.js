@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import * as ROUTES from './util/routes';
 
 // MUI items
 import { createMuiTheme, MuiThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
@@ -25,15 +26,19 @@ function App() {
         <Switch>
           <Route 
             exact 
-            path='/' 
+            path={ROUTES.HOME}
             component={Dashboard} />
           <Route 
-            path='/goal/:id' 
+            path={ROUTES.GOAL} 
             component={GoalDetails} />
-          <Route path='/login' component={Login} />
-          <Route path='/signup' component={SignUp} />
           <Route 
-            path='/create' 
+            path={ROUTES.LOGIN} 
+            component={Login} />
+          <Route 
+            path={ROUTES.SIGNUP} 
+            component={SignUp} />
+          <Route 
+            path={ROUTES.CREATE} 
             component={CreateGoal} />
         </Switch>
       </div>

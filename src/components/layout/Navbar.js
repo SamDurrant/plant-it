@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
+import * as ROUTES from '../../util/routes';
 
 // MUI stuff
 import AppBar from '@material-ui/core/AppBar';
@@ -40,19 +41,19 @@ function Navbar(props) {
     <AppBar>
       <Toolbar className={classes.navBar}>
         <Link 
-          to='/' 
+          to={ROUTES.HOME} 
           className={classes.appLogo}>
           <Typography variant="h1" edge="start">Plan(t) It</Typography>
         </Link>
 
         <div className={classes.navLinkBox}>
           <Link 
-            to='/create'
+            to={ROUTES.CREATE}
             className={classes.navLink}>
             <Typography variant="h5" edge="end">New Goal</Typography>
           </Link>
           <Link
-            to='/'
+            to={ROUTES.HOME}
             onClick={handleLogout}
             className={classes.navLink}>
             <Typography variant="h5" edge="end">Logout</Typography>
@@ -61,12 +62,12 @@ function Navbar(props) {
 
         <div className={classes.navLinkBox}>
           <Link 
-            to='/signup'
+            to={ROUTES.SIGNUP}
             className={classes.navLink}>
             <Typography variant="h5" edge="end">Sign up</Typography>
           </Link>
           <Link 
-            to='/login'
+            to={ROUTES.LOGIN}
             className={classes.navLink}>
             <Typography variant="h5" edge="end">Login</Typography>
           </Link>

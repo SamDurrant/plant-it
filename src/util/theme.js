@@ -29,6 +29,10 @@ export default {
       color:  'inherit',
       padding: '0 20px'
     },
+    cardLink: {
+      textDecoration: 'none',
+      color: 'inherit'
+    },
     boldRuler: {
       height: 3,
       border: 'none',

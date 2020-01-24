@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 
+// Redux items
+import { connect } from 'react-redux';
+import { createGoal } from '../../redux/actions/goalActions';
+
 // MUI items
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -33,7 +37,7 @@ class CreateGoal extends Component {
       content: this.state.content
     }
     e.preventDefault();
-    console.log(newGoal);
+    this.props.createGoal(newGoal);
   }
   
   render() {
@@ -74,4 +78,12 @@ class CreateGoal extends Component {
   }
 }
 
-export default withStyles(styles)(CreateGoal);
+const mapActionsToProps = {
+  createGoal
+}
+
+const mapStateToProps = state => ({
+
+})
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(CreateGoal));
