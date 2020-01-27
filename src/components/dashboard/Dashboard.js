@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Redirect } from 'react-router-dom';
+
+// Redux items
+import { connect } from 'react-redux';
+import { getAllGoals } from '../../redux/actions/goalActions';
+import { getCurrentUser } from '../../redux/actions/authActions';
 
 // Components
 import GoalList from '../goals/GoalList';
@@ -17,22 +23,42 @@ const styles = (theme) => ({
 })
 
 class Dashboard extends Component {
+  componentDidMount() {
+    this.props.getCurrentUser();
+    this.props.getAllGoals();
+  }
+  
   render() {
-    const { classes, goals } = this.props;
+    const { classes, goals, authenticated } = this.props;
 
     return (
-      <Grid container className={classes.dashboard}>
-        <Grid container item sm={12} justify="space-around">
-          <Grid item sm={4} xs={10}>
-            <GoalList goals={goals} />
-          </Grid>
-          <Grid item sm={4} xs={10}>
-            <Notifications />
+      authenticated ? (
+        <Grid container className={classes.dashboard}>
+          <Grid container item sm={12} justify="space-around">
+            <Grid item md={6} sm={8} xs={10}>
+              <GoalList goals={goals} />
+            </Grid>
+            <Grid item md={4} sm={2} xs={10}>
+              <Notifications />
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <Redirect to='/login' />
+      )
     )
   }
 }
 
-export default withStyles(styles)(Dashboard);
+const mapActionsToProps = {
+  getAllGoals,
+  getCurrentUser
+}
+
+const mapStateToProps = state => ({
+  goals: state.goal.goals,
+  authenticated: state.auth.authenticated,
+  user: state.auth.user
+})
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));

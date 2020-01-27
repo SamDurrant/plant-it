@@ -2,6 +2,10 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
 
+// Redux items
+import { connect } from 'react-redux';
+import { logoutUser } from '../../redux/actions/authActions';
+
 // MUI stuff
 import AppBar from '@material-ui/core/AppBar';
 import Fab from '@material-ui/core/Fab';
@@ -32,9 +36,9 @@ const styles = (theme) => ({
 
 function Navbar(props) {
   const handleLogout = () => {
-    console.log('logged out')
+    props.logoutUser();
   }
-  const { classes } = props;
+  const { classes, authenticated } = props;
 
   return (
     <AppBar>
@@ -45,33 +49,35 @@ function Navbar(props) {
           <Typography variant="h1" edge="start">Plan(t) It</Typography>
         </Link>
 
-        <div className={classes.navLinkBox}>
-          <Link 
-            to='/create'
-            className={classes.navLink}>
-            <Typography variant="h5" edge="end">New Goal</Typography>
-          </Link>
-          <Link
-            to='/'
-            onClick={handleLogout}
-            className={classes.navLink}>
-            <Typography variant="h5" edge="end">Logout</Typography>
-          </Link>
-        </div>
-
-        <div className={classes.navLinkBox}>
-          <Link 
-            to='/signup'
-            className={classes.navLink}>
-            <Typography variant="h5" edge="end">Sign up</Typography>
-          </Link>
-          <Link 
-            to='/login'
-            className={classes.navLink}>
-            <Typography variant="h5" edge="end">Login</Typography>
-          </Link>
-        </div>
-          
+        {authenticated ? (
+          <div className={classes.navLinkBox}>
+            <Link 
+              to='/create'
+              className={classes.navLink}>
+              <Typography variant="h5" edge="end">New Goal</Typography>
+            </Link>
+            <Link
+              to='/'
+              onClick={handleLogout}
+              className={classes.navLink}>
+              <Typography variant="h5" edge="end">Logout</Typography>
+            </Link>
+          </div>
+          ) : (
+          <div className={classes.navLinkBox}>
+            <Link 
+              to='/signup'
+              className={classes.navLink}>
+              <Typography variant="h5" edge="end">Sign up</Typography>
+            </Link>
+            <Link 
+              to='/login'
+              className={classes.navLink}>
+              <Typography variant="h5" edge="end">Login</Typography>
+            </Link>
+          </div>
+          )
+        }          
         <Fab 
           variant="round" 
           color="secondary"
@@ -83,4 +89,12 @@ function Navbar(props) {
   )
 }
 
-export default withStyles(styles)(Navbar);
+const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated
+})
+
+const mapActionsToProps = {
+  logoutUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Navbar));

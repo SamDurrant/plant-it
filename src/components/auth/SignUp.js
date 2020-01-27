@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
+import { Redirect } from 'react-router-dom';
+
+// Redux items
+import { connect } from 'react-redux';
+import { createNewUser } from '../../redux/actions/authActions';
 
 // MUI items
 import Button from '@material-ui/core/Button';
@@ -31,57 +36,70 @@ class SignUp extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
+    this.props.createNewUser(this.state);
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, authenticated } = this.props;
     return (
-      <Grid container className={classes.signUp} justify="center">
-        <Grid item md={4} sm={6} xs={10}>
-          <form className={classes.basicForm} onSubmit={this.handleSubmit}>
-            <Typography variant="h4" className={classes.capsHeading}>Sign Up</Typography>
-            <TextField 
-              className={classes.textField}
-              id="email" 
-              type="email"
-              label="Email" 
-              variant="outlined" 
-              color="secondary"
-              onChange={this.handleChange}/>
-            <TextField 
-              className={classes.textField}
-              id="password"
-              type="password" 
-              label="Password" 
-              variant="outlined"
-              color="secondary" 
-              onChange={this.handleChange}/>
-            <TextField 
-              className={classes.textField}
-              id="firstName"
-              type="text" 
-              label="First Name" 
-              variant="outlined"
-              color="secondary" 
-              onChange={this.handleChange}/>
-            <TextField 
-              className={classes.textField}
-              id="lastName"
-              type="text" 
-              label="Last Name" 
-              variant="outlined"
-              color="secondary" 
-              onChange={this.handleChange}/>
-            <Button 
-              className={classes.submitBtn}
-              type="submit"
-              variant="contained" 
-              color="secondary">Sign Up</Button>
-          </form>
+      authenticated ? (
+        <Redirect to='/' />
+      ) : (
+        <Grid container className={classes.signUp} justify="center">
+          <Grid item md={4} sm={6} xs={10}>
+            <form className={classes.basicForm} onSubmit={this.handleSubmit}>
+              <Typography variant="h4" className={classes.capsHeading}>Sign Up</Typography>
+              <TextField 
+                className={classes.textField}
+                id="email" 
+                type="email"
+                label="Email" 
+                variant="outlined" 
+                color="secondary"
+                onChange={this.handleChange}/>
+              <TextField 
+                className={classes.textField}
+                id="password"
+                type="password" 
+                label="Password" 
+                variant="outlined"
+                color="secondary" 
+                onChange={this.handleChange}/>
+              <TextField 
+                className={classes.textField}
+                id="firstName"
+                type="text" 
+                label="First Name" 
+                variant="outlined"
+                color="secondary" 
+                onChange={this.handleChange}/>
+              <TextField 
+                className={classes.textField}
+                id="lastName"
+                type="text" 
+                label="Last Name" 
+                variant="outlined"
+                color="secondary" 
+                onChange={this.handleChange}/>
+              <Button 
+                className={classes.submitBtn}
+                type="submit"
+                variant="contained" 
+                color="secondary">Sign Up</Button>
+            </form>
+          </Grid>
         </Grid>
-      </Grid>
+      )
     )
   }
 }
 
-export default withStyles(styles)(SignUp);
+const mapStateToProps = state => ({
+  authenticated: state.auth.authenticated
+})
+
+const mapActionsToProps = {
+  createNewUser
+}
+
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(SignUp));

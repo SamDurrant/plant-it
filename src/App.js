@@ -1,6 +1,10 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 
+// Redux items
+import { Provider } from 'react-redux';
+import store from './redux/store';
+
 // MUI items
 import { createMuiTheme, MuiThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
 import themeFile from './util/theme';
@@ -19,25 +23,27 @@ theme = responsiveFontSizes(theme);
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <Router>
-      <div className="App">
-        <Navbar />
-        <Switch>
-          <Route 
-            exact 
-            path='/' 
-            component={Dashboard} />
-          <Route 
-            path='/goal/:id' 
-            component={GoalDetails} />
-          <Route path='/login' component={Login} />
-          <Route path='/signup' component={SignUp} />
-          <Route 
-            path='/create' 
-            component={CreateGoal} />
-        </Switch>
-      </div>
-      </Router>
+      <Provider store={store}>
+        <Router>
+          <div className="App">
+            <Navbar />
+            <Switch>
+              <Route 
+                exact 
+                path='/' 
+                component={Dashboard} />
+              <Route 
+                path='/goal/:id' 
+                component={GoalDetails} />
+              <Route path='/login' component={Login} />
+              <Route path='/signup' component={SignUp} />
+              <Route 
+                path='/create' 
+                component={CreateGoal} />
+            </Switch>
+          </div>
+        </Router>
+      </Provider>
     </MuiThemeProvider>
   );
 }

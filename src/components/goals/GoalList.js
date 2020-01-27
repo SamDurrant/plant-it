@@ -6,7 +6,7 @@ const GoalList = ({goals}) => {
     <div>
       { goals && goals.map(goal => {
         return (
-          <GoalSummary goal={goal} key={goal.id} />
+          <GoalSummary goal={goal} key={goal.goalId} />
         )
       }) }
     </div>

@@ -24,6 +24,9 @@ export default {
       textTransform: 'uppercase',
       letterSpacing: 3
     },
+    centeredGridItems: {
+      textAlign: 'center'
+    },
     navLink: {
       textDecoration: 'none',
       color:  'inherit',
@@ -45,7 +48,20 @@ export default {
     },
     textField: {
       display: 'block',
-      margin: '15px auto'
+      margin: '15px auto',
+      width: 'fit-content'
+    },
+    selectField: {
+      minWidth: 175
+    },
+    selectFieldLabel: {
+      marginTop: 15
+    },
+    selectItem: {
+      maxWidth: '40%',
+      display: 'block',
+      margin: '0 auto',
+      height: 'inherit'
     },
     submitBtn : {
       marginTop: 25
