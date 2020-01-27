@@ -19,6 +19,5 @@ let config = {
 // intiializes app
 firebase.initializeApp(config);
 // adds firestore functionality
-let db = firebase.firestore();
-
-export default db;
+export const db = firebase.firestore();
+export const auth = firebase.auth();

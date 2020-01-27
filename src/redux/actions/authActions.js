@@ -5,21 +5,22 @@ import {
   LOGOUT_SUCCESS,
   LOGOUT_ERROR
 } from '../types';
-import firebase from 'firebase/app';
-import db from '../../config/fbConfig';
+import {db, auth} from '../../config/fbConfig';
 
 
 // logs a user into their account
-export const loginUser = userAccount => dispatch => {
+export const doSignInWithEmailAndPassword = userAccount => dispatch => {
   let { email, password } = userAccount;
 
-  firebase
-    .auth()
+  auth
     .signInWithEmailAndPassword(email, password)
     .then(() => {
       dispatch({ 
         type: LOGIN_SUCCESS 
       });
+    })
+    .then(() => {
+      getCurrentUser();  
     })
     .catch(err => {
       let errorCode = err.code;
@@ -34,8 +35,7 @@ export const loginUser = userAccount => dispatch => {
 
 // gets current user
 export const getCurrentUser = () => dispatch => {
-  firebase
-    .auth()
+  auth
     .onAuthStateChanged(userAuth => {
     if (userAuth) {
       // if user is authorized, retrieve user profile from database
@@ -54,17 +54,33 @@ export const getCurrentUser = () => dispatch => {
 }
 
 // creates a new user
-export const createNewUser = userData => dispatch => {
-  let { email, password, firstName, lastName } = userData;
+export const doCreateUserWithEmailAndPassword = userData => dispatch => {
+  const { email, password, firstName, lastName } = userData;
 
-  firebase
-    .auth()
+  auth
     .createUserWithEmailAndPassword(email, password)
     .then(data => {
-      // create user profile in our database
-      createUserProfile(data.user, firstName, lastName);
-      //
-      getCurrentUser();
+      const  userAuth = data.user;
+
+      if (!userAuth) return;
+      const docRef = db.doc(`users/${userAuth.uid}`);
+      docRef
+        .get()
+        .then(user => {
+          if (!user.exists) {
+            const newUser = {
+              email,
+              userId: userAuth.uid,
+              firstName,
+              lastName,
+              createdAt: new Date().toISOString()
+            }
+            
+            docRef.set(newUser)
+          }
+          dispatch({ type: LOGIN_SUCCESS });
+          getCurrentUser();
+        })
     })
     .catch(err => {
       let errorCode = err.code;
@@ -74,35 +90,12 @@ export const createNewUser = userData => dispatch => {
         type: LOGIN_ERROR,
         payload: { errorMessage, errorCode }
       })
-  })
-}
-
-// creates a new user profile in database
-export const createUserProfile = (userAuth, first, last) => {
-  if (!userAuth) return;
-
-  const userRef = db.doc(`users/${userAuth.uid}`);
-  userRef.get()
-    .then(user => {
-      if (!user.exists) {
-        const newUser = {
-          email: userAuth.email,
-          id: userAuth.uid,
-          firstName: first,
-          lastName: last
-        }
-        userRef.set(newUser);
-      }
-    })
-    .catch(err => {
-      console.log(err, 'something went wrong');
     })
 }
 
 // logs a user out
-export const logoutUser = () => dispatch => {
-  firebase
-    .auth()
+export const doSignOutUser = () => dispatch => {
+  auth
     .signOut()
     .then(() => {
       dispatch({

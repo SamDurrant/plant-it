@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
+import * as ROUTES from '../../util/routes';
 
 // Redux items
 import { connect } from 'react-redux';
-import { logoutUser } from '../../redux/actions/authActions';
+import { doSignOutUser } from '../../redux/actions/authActions';
 
 // MUI stuff
 import AppBar from '@material-ui/core/AppBar';
@@ -36,15 +37,15 @@ const styles = (theme) => ({
 
 function Navbar(props) {
   const handleLogout = () => {
-    props.logoutUser();
+    props.doSignOutUser();
   }
-  const { classes, authenticated } = props;
+  const { classes, authenticated, user } = props;
 
   return (
     <AppBar>
       <Toolbar className={classes.navBar}>
         <Link 
-          to='/' 
+          to={ROUTES.HOME}
           className={classes.appLogo}>
           <Typography variant="h1" edge="start">Plan(t) It</Typography>
         </Link>
@@ -54,10 +55,10 @@ function Navbar(props) {
             <Link 
               to='/create'
               className={classes.navLink}>
-              <Typography variant="h5" edge="end">New Goal</Typography>
+              <Typography variant="h5" edge="end">New Item</Typography>
             </Link>
             <Link
-              to='/'
+              to={ROUTES.HOME}
               onClick={handleLogout}
               className={classes.navLink}>
               <Typography variant="h5" edge="end">Logout</Typography>
@@ -66,12 +67,12 @@ function Navbar(props) {
           ) : (
           <div className={classes.navLinkBox}>
             <Link 
-              to='/signup'
+              to={ROUTES.SIGNUP}
               className={classes.navLink}>
               <Typography variant="h5" edge="end">Sign up</Typography>
             </Link>
             <Link 
-              to='/login'
+              to={ROUTES.LOGIN}
               className={classes.navLink}>
               <Typography variant="h5" edge="end">Login</Typography>
             </Link>
@@ -82,7 +83,11 @@ function Navbar(props) {
           variant="round" 
           color="secondary"
           className={classes.userButton}>
-          |=|
+            { user ? (
+              `${user.firstName[0]}${user.lastName[0]}`
+            ) : (
+              'macro'
+            )}
         </Fab>
       </Toolbar>
     </AppBar>
@@ -90,11 +95,12 @@ function Navbar(props) {
 }
 
 const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated
+  authenticated: state.auth.authenticated,
+  user: state.auth.user
 })
 
 const mapActionsToProps = {
-  logoutUser
+  doSignOutUser
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Navbar));

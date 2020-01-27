@@ -1,5 +1,6 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
+import * as ROUTES from './util/routes';
 
 // Redux items
 import { Provider } from 'react-redux';
@@ -12,10 +13,8 @@ import themeFile from './util/theme';
 // components
 import Navbar from './components/layout/Navbar';
 import Dashboard from './components/dashboard/Dashboard';
-import GoalDetails from './components/goals/GoalDetails';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
-import CreateGoal from './components/goals/CreateGoal';
 
 let theme = createMuiTheme(themeFile);
 theme = responsiveFontSizes(theme);
@@ -30,16 +29,10 @@ function App() {
             <Switch>
               <Route 
                 exact 
-                path='/' 
+                path={ROUTES.HOME} 
                 component={Dashboard} />
-              <Route 
-                path='/goal/:id' 
-                component={GoalDetails} />
-              <Route path='/login' component={Login} />
-              <Route path='/signup' component={SignUp} />
-              <Route 
-                path='/create' 
-                component={CreateGoal} />
+              <Route path={ROUTES.LOGIN} component={Login} />
+              <Route path={ROUTES.SIGNUP} component={SignUp} />
             </Switch>
           </div>
         </Router>

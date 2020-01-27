@@ -3,13 +3,11 @@ import thunk from 'redux-thunk';
 
 
 // Reducers
-import goalReducer from './reducers/goalReducer';
 import authReducer from './reducers/authReducer';
 
 const initialState = {};
 const middleware = [thunk];
 const reducers = combineReducers({
-  goal: goalReducer,
   auth: authReducer
 })
 

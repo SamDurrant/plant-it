@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 // Redux items
 import { connect } from 'react-redux';
-import { loginUser } from '../../redux/actions/authActions';
+import { doSignInWithEmailAndPassword } from '../../redux/actions/authActions';
 
 // MUI items
 import Button from '@material-ui/core/Button';
@@ -38,7 +38,7 @@ class Login extends Component {
       email: this.state.email,
       password: this.state.password
     }
-    this.props.loginUser(userAccount);
+    this.props.doSignInWithEmailAndPassword(userAccount);
   }
 
   render() {
@@ -85,7 +85,7 @@ const mapStateToProps = state => ({
 })
 
 const mapActionsToProps = {
-  loginUser
+  doSignInWithEmailAndPassword
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Login));

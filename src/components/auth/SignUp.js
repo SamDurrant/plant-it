@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom';
 
 // Redux items
 import { connect } from 'react-redux';
-import { createNewUser } from '../../redux/actions/authActions';
+import { doCreateUserWithEmailAndPassword } from '../../redux/actions/authActions';
 
 // MUI items
 import Button from '@material-ui/core/Button';
@@ -24,8 +24,10 @@ class SignUp extends Component {
   state = {
     email: '',
     password: '',
+    confirmPassword: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    error: null
   }
 
   handleChange = (e) => {
@@ -36,11 +38,26 @@ class SignUp extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.props.createNewUser(this.state);
+    let newUser = {
+      email: this.state.email,
+      password: this.state.password,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName
+    }
+    
+    this.props.doCreateUserWithEmailAndPassword(newUser);
   }
 
   render() {
     const { classes, authenticated } = this.props;
+    const { password, confirmPassword, email, firstName, lastName } = this.state;
+    const isInvalid =
+      password !== confirmPassword ||
+      password === '' ||
+      email === '' ||
+      firstName === '' ||
+      lastName === '';
+
     return (
       authenticated ? (
         <Redirect to='/' />
@@ -67,6 +84,14 @@ class SignUp extends Component {
                 onChange={this.handleChange}/>
               <TextField 
                 className={classes.textField}
+                id="confirmPassword"
+                type="password" 
+                label="Confirm Password" 
+                variant="outlined"
+                color="secondary" 
+                onChange={this.handleChange}/>
+              <TextField 
+                className={classes.textField}
                 id="firstName"
                 type="text" 
                 label="First Name" 
@@ -82,10 +107,12 @@ class SignUp extends Component {
                 color="secondary" 
                 onChange={this.handleChange}/>
               <Button 
+                disabled={isInvalid}
                 className={classes.submitBtn}
                 type="submit"
                 variant="contained" 
                 color="secondary">Sign Up</Button>
+                {this.state.error && <p>{this.state.error.message}</p>}
             </form>
           </Grid>
         </Grid>
@@ -99,7 +126,7 @@ const mapStateToProps = state => ({
 })
 
 const mapActionsToProps = {
-  createNewUser
+  doCreateUserWithEmailAndPassword
 }
 
 export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(SignUp));
