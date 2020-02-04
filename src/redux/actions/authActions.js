@@ -5,7 +5,8 @@ import {
   LOGOUT_SUCCESS,
   LOGOUT_ERROR
 } from '../types';
-import {db, auth} from '../../config/fbConfig';
+import {db, auth} from '../../firebase/fbConfig';
+import axios from 'axios';
 
 
 // logs a user into their account
@@ -108,4 +109,51 @@ export const doSignOutUser = () => dispatch => {
         payload: err
       })
     })
+}
+
+export const getItems = () => dispatch => {
+  const appId = '4d8cfdde';
+  const appKey = 'a1e12734a782482fea04b983b75c562e';
+  const apiEndpoint = 'https://trackapi.nutritionix.com/v2/search/instant';
+  const headers = {
+    "x-app-id": appId,
+    "x-app-key": appKey,
+    "x-remote-user-id": 0
+  }
+  const params = { query: "olive oil"};
+  
+  // returns list of foods both common and branded
+  axios.get(`${apiEndpoint}?query=${params.query}`, {
+    headers
+  })
+  .then(res => {
+    console.log(res.data)
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+  // retrieves nutrition for food item
+  const apiEnd = 'https://trackapi.nutritionix.com/v2/natural/nutrients';
+
+  axios.post(apiEnd, params, {
+    headers
+  })
+  .then(res => {
+    console.log(res.data)
+  })
+  .catch(err => {
+    console.log(err.message)
+  })
+
+  // retrieves nutrition for branded item
+  // const p = { query: '54072a751701ffb9576b74ec' }
+  // const apiBranded = 'https://trackapi.nutritionix.com/v2/search/item';
+  // axios.get(apiBranded + `?nix_item_id=${p.query}`, { headers })
+  // .then(res => {
+  //   console.log(res.data.foods)
+  // })
+  // .catch(err => {
+  //   console.log(err);
+  // })
 }

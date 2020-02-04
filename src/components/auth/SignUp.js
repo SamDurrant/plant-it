@@ -1,10 +1,8 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Redirect } from 'react-router-dom';
 
-// Redux items
-import { connect } from 'react-redux';
-import { doCreateUserWithEmailAndPassword } from '../../redux/actions/authActions';
+import { authContext } from '../../contexts/AuthContext';
 
 // MUI items
 import Button from '@material-ui/core/Button';
@@ -20,113 +18,87 @@ const styles = (theme) => ({
   }
 })
 
-class SignUp extends Component {
-  state = {
-    email: '',
-    password: '',
-    confirmPassword: '',
-    firstName: '',
-    lastName: '',
-    error: null
-  }
-
-  handleChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
-  }
-
-  handleSubmit = (e) => {
+function SignUp (props) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  
+  const { classes } = props;  
+  const { userAuth, signUp } = useContext(authContext);
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    let newUser = {
-      email: this.state.email,
-      password: this.state.password,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName
-    }
-    
-    this.props.doCreateUserWithEmailAndPassword(newUser);
+    signUp(email, password, firstName, lastName)
   }
 
-  render() {
-    const { classes, authenticated } = this.props;
-    const { password, confirmPassword, email, firstName, lastName } = this.state;
-    const isInvalid =
-      password !== confirmPassword ||
-      password === '' ||
-      email === '' ||
-      firstName === '' ||
-      lastName === '';
+  const isInvalid =
+    password !== confirmPassword ||
+    password === '' ||
+    email === '' ||
+    firstName === '' ||
+    lastName === '';
 
-    return (
-      authenticated ? (
-        <Redirect to='/' />
-      ) : (
-        <Grid container className={classes.signUp} justify="center">
-          <Grid item md={4} sm={6} xs={10}>
-            <form className={classes.basicForm} onSubmit={this.handleSubmit}>
-              <Typography variant="h4" className={classes.capsHeading}>Sign Up</Typography>
-              <TextField 
-                className={classes.textField}
-                id="email" 
-                type="email"
-                label="Email" 
-                variant="outlined" 
-                color="secondary"
-                onChange={this.handleChange}/>
-              <TextField 
-                className={classes.textField}
-                id="password"
-                type="password" 
-                label="Password" 
-                variant="outlined"
-                color="secondary" 
-                onChange={this.handleChange}/>
-              <TextField 
-                className={classes.textField}
-                id="confirmPassword"
-                type="password" 
-                label="Confirm Password" 
-                variant="outlined"
-                color="secondary" 
-                onChange={this.handleChange}/>
-              <TextField 
-                className={classes.textField}
-                id="firstName"
-                type="text" 
-                label="First Name" 
-                variant="outlined"
-                color="secondary" 
-                onChange={this.handleChange}/>
-              <TextField 
-                className={classes.textField}
-                id="lastName"
-                type="text" 
-                label="Last Name" 
-                variant="outlined"
-                color="secondary" 
-                onChange={this.handleChange}/>
-              <Button 
-                disabled={isInvalid}
-                className={classes.submitBtn}
-                type="submit"
-                variant="contained" 
-                color="secondary">Sign Up</Button>
-                {this.state.error && <p>{this.state.error.message}</p>}
-            </form>
-          </Grid>
+  return (
+    userAuth ? (
+      <Redirect to='/' />
+    ) : (
+      <Grid container className={classes.signUp} justify="center">
+        <Grid item md={4} sm={6} xs={10}>
+          <form className={classes.basicForm} onSubmit={handleSubmit}>
+            <Typography variant="h4" className={classes.capsHeading}>Sign Up</Typography>
+            <TextField 
+              className={classes.textField}
+              id="email" 
+              type="email"
+              label="Email" 
+              variant="outlined" 
+              color="secondary"
+              onChange={e => setEmail(e.target.value)}/>
+            <TextField 
+              className={classes.textField}
+              id="password"
+              type="password" 
+              label="Password" 
+              variant="outlined"
+              color="secondary" 
+              onChange={e => setPassword(e.target.value)}/>
+            <TextField 
+              className={classes.textField}
+              id="confirmPassword"
+              type="password" 
+              label="Confirm Password" 
+              variant="outlined"
+              color="secondary" 
+              onChange={e => setConfirmPassword(e.target.value)}/>
+            <TextField 
+              className={classes.textField}
+              id="firstName"
+              type="text" 
+              label="First Name" 
+              variant="outlined"
+              color="secondary" 
+              onChange={e => setFirstName(e.target.value)}/>
+            <TextField 
+              className={classes.textField}
+              id="lastName"
+              type="text" 
+              label="Last Name" 
+              variant="outlined"
+              color="secondary" 
+              onChange={e => setLastName(e.target.value)}/>
+            <Button 
+              disabled={isInvalid}
+              className={classes.submitBtn}
+              type="submit"
+              variant="contained" 
+              color="secondary">Sign Up</Button>
+          </form>
         </Grid>
-      )
+      </Grid>
     )
-  }
+  )
 }
 
-const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated
-})
-
-const mapActionsToProps = {
-  doCreateUserWithEmailAndPassword
-}
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(SignUp));
+export default withStyles(styles)(SignUp);

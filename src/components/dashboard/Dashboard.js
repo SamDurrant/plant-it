@@ -1,11 +1,9 @@
-import React, { Component } from 'react';
+import React, { useContext } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Redirect } from 'react-router-dom';
 import *  as ROUTES from '../../util/routes';
 
-// Redux items
-import { connect } from 'react-redux';
-import { getCurrentUser } from '../../redux/actions/authActions';
+import { authContext } from '../../contexts/AuthContext';
 
 // Components
 import Notifications from './Notifications';
@@ -21,40 +19,26 @@ const styles = (theme) => ({
   }
 })
 
-class Dashboard extends Component {
-  componentDidMount() {
-    this.props.getCurrentUser();
-  }
-  
-  render() {
-    const { classes, authenticated } = this.props;
+function Dashboard(props) {
+  const { classes } = props;
+  const { userAuth } = useContext(authContext);
 
-    return (
-      authenticated ? (
-        <Grid container className={classes.dashboard}>
-          <Grid container item sm={12} justify="space-around">
-            <Grid item md={6} sm={8} xs={10}>
-              LIST ONE
-            </Grid>
-            <Grid item md={4} sm={2} xs={10}>
-              <Notifications />
-            </Grid>
+  return (
+    userAuth ? (
+      <Grid container className={classes.dashboard}>
+        <Grid container item sm={12} justify="space-around">
+          <Grid item md={6} sm={8} xs={10}>
+            LIST ONE
+          </Grid>
+          <Grid item md={4} sm={2} xs={10}>
+            <Notifications />
           </Grid>
         </Grid>
-      ) : (
-        <Redirect to={ROUTES.LOGIN} />
-      )
+      </Grid>
+    ) : (
+      <Redirect to={ROUTES.LOGIN} />
     )
-  }
+  )
 }
 
-const mapActionsToProps = {
-  getCurrentUser
-}
-
-const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated,
-  user: state.auth.user
-})
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Dashboard));
+export default withStyles(styles)(Dashboard);

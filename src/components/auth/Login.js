@@ -1,10 +1,9 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Redirect } from 'react-router-dom';
 
-// Redux items
-import { connect } from 'react-redux';
-import { doSignInWithEmailAndPassword } from '../../redux/actions/authActions';
+// Context items
+import { authContext } from '../../contexts/AuthContext';
 
 // MUI items
 import Button from '@material-ui/core/Button';
@@ -20,36 +19,25 @@ const styles = (theme) => ({
   }
 })
 
-class Login extends Component {
-  state = {
-    email: '',
-    password: ''
-  }
+function Login (props) {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.id]: e.target.value
-    })
-  }
-
-  handleSubmit = (e) => {
+  const { classes } = props;
+  const { userAuth, signIn } = useContext(authContext);
+  
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const userAccount = {
-      email: this.state.email,
-      password: this.state.password
-    }
-    this.props.doSignInWithEmailAndPassword(userAccount);
+    signIn(email, password);
   }
 
-  render() {
-    const { classes, authenticated } = this.props;
     return (
-      authenticated ? (
+      userAuth ? (
         <Redirect to='/' />
       ) : (
         <Grid container className={classes.signIn} justify="center">
           <Grid item md={4} sm={6} xs={10}>
-            <form className={classes.basicForm} onSubmit={this.handleSubmit}>
+            <form className={classes.basicForm} onSubmit={handleSubmit}>
               <Typography variant="h4" className={classes.capsHeading}>Login</Typography>
               <TextField 
                 className={classes.textField}
@@ -58,7 +46,7 @@ class Login extends Component {
                 label="Email" 
                 variant="outlined" 
                 color="secondary"
-                onChange={this.handleChange}/>
+                onChange={e => setEmail(e.target.value)}/>
               <TextField 
                 className={classes.textField}
                 id="password"
@@ -66,7 +54,7 @@ class Login extends Component {
                 label="Password" 
                 variant="outlined"
                 color="secondary" 
-                onChange={this.handleChange}/>
+                onChange={e => setPassword(e.target.value)}/>
               <Button 
                 className={classes.submitBtn}
                 type="submit"
@@ -77,15 +65,6 @@ class Login extends Component {
         </Grid>
       )
     )
-  }
 }
 
-const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated
-})
-
-const mapActionsToProps = {
-  doSignInWithEmailAndPassword
-}
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Login));
+export default withStyles(styles)(Login);

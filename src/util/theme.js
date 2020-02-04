@@ -1,15 +1,15 @@
 export default {
   palette: {
     primary: {
-      light: '#f27573',
-      main: '#ef5350',
-      dark: '#a73a38',
+      light: '#e34e6d',
+      main: '#dc2249',
+      dark: '#9a1733',
       contrastText: '#eee'
     },
     secondary: {
-      light: '#6a52b3',
-      main: '#4527a0',
-      dark: '#301b70',
+      light: '#90d5c2',
+      main: '#75cbb3',
+      dark: '#518e7d',
       contrastText: '#eee'
     }
   },
@@ -42,9 +42,13 @@ export default {
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      padding: '50px 0',
+      padding: '50px 25px',
       borderRadius: 25,
       margin: '25px auto 75px auto'
+    },
+    formHeadings: {
+      margin: '0 15px 25px 15px',
+      textAlign: 'center'
     },
     textField: {
       display: 'block',
@@ -52,16 +56,11 @@ export default {
       width: 'fit-content'
     },
     selectField: {
-      minWidth: 175
+      minWidth: 175,
+      margin: '25px auto'
     },
     selectFieldLabel: {
-      marginTop: 15
-    },
-    selectItem: {
-      maxWidth: '40%',
-      display: 'block',
-      margin: '0 auto',
-      height: 'inherit'
+      marginTop: 10
     },
     submitBtn : {
       marginTop: 25

@@ -1,10 +1,7 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import * as ROUTES from './util/routes';
-
-// Redux items
-import { Provider } from 'react-redux';
-import store from './redux/store';
+import AuthProvider from './contexts/AuthContext';
 
 // MUI items
 import { createMuiTheme, MuiThemeProvider, responsiveFontSizes } from '@material-ui/core/styles';
@@ -15,6 +12,7 @@ import Navbar from './components/layout/Navbar';
 import Dashboard from './components/dashboard/Dashboard';
 import Login from './components/auth/Login';
 import SignUp from './components/auth/SignUp';
+import Nutrition from './components/nutrition/Nutrition';
 
 let theme = createMuiTheme(themeFile);
 theme = responsiveFontSizes(theme);
@@ -22,7 +20,7 @@ theme = responsiveFontSizes(theme);
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
-      <Provider store={store}>
+      <AuthProvider>
         <Router>
           <div className="App">
             <Navbar />
@@ -33,10 +31,11 @@ function App() {
                 component={Dashboard} />
               <Route path={ROUTES.LOGIN} component={Login} />
               <Route path={ROUTES.SIGNUP} component={SignUp} />
+              <Route path={ROUTES.NUTRITION} component={Nutrition} />
             </Switch>
           </div>
         </Router>
-      </Provider>
+      </AuthProvider>
     </MuiThemeProvider>
   );
 }

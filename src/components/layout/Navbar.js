@@ -1,11 +1,8 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import withStyles from '@material-ui/core/styles/withStyles';
 import * as ROUTES from '../../util/routes';
-
-// Redux items
-import { connect } from 'react-redux';
-import { doSignOutUser } from '../../redux/actions/authActions';
+import { authContext } from '../../contexts/AuthContext';
 
 // MUI stuff
 import AppBar from '@material-ui/core/AppBar';
@@ -36,10 +33,12 @@ const styles = (theme) => ({
 })
 
 function Navbar(props) {
+  const { classes } = props;
+  const { userAuth, signOut } = useContext(authContext);
+
   const handleLogout = () => {
-    props.doSignOutUser();
+    signOut();
   }
-  const { classes, authenticated, user } = props;
 
   return (
     <AppBar>
@@ -47,60 +46,45 @@ function Navbar(props) {
         <Link 
           to={ROUTES.HOME}
           className={classes.appLogo}>
-          <Typography variant="h1" edge="start">Plan(t) It</Typography>
+          <Typography variant="h1" edge="start">Macro</Typography>
         </Link>
-
-        {authenticated ? (
-          <div className={classes.navLinkBox}>
-            <Link 
-              to='/create'
-              className={classes.navLink}>
-              <Typography variant="h5" edge="end">New Item</Typography>
-            </Link>
-            <Link
-              to={ROUTES.HOME}
-              onClick={handleLogout}
-              className={classes.navLink}>
-              <Typography variant="h5" edge="end">Logout</Typography>
-            </Link>
-          </div>
+          {userAuth ? (
+            <div className={classes.navLinkBox}>
+              <Link 
+                to={ROUTES.NUTRITION}
+                className={classes.navLink}>
+                <Typography variant="h5" edge="end">Nutrition</Typography>
+              </Link>
+              <Link
+                to={ROUTES.HOME}
+                onClick={handleLogout}
+                className={classes.navLink}>
+                <Typography variant="h5" edge="end">Logout</Typography>
+              </Link>
+            </div>
           ) : (
-          <div className={classes.navLinkBox}>
-            <Link 
-              to={ROUTES.SIGNUP}
-              className={classes.navLink}>
-              <Typography variant="h5" edge="end">Sign up</Typography>
-            </Link>
-            <Link 
-              to={ROUTES.LOGIN}
-              className={classes.navLink}>
-              <Typography variant="h5" edge="end">Login</Typography>
-            </Link>
-          </div>
-          )
-        }          
+            <div className={classes.navLinkBox}>
+              <Link 
+                to={ROUTES.SIGNUP}
+                className={classes.navLink}>
+                <Typography variant="h5" edge="end">Sign up</Typography>
+              </Link>
+              <Link 
+                to={ROUTES.LOGIN}
+                className={classes.navLink}>
+                <Typography variant="h5" edge="end">Login</Typography>
+              </Link>
+            </div>
+          )}
         <Fab 
           variant="round" 
           color="secondary"
           className={classes.userButton}>
-            { user ? (
-              `${user.firstName[0]}${user.lastName[0]}`
-            ) : (
-              'macro'
-            )}
+            macro
         </Fab>
       </Toolbar>
     </AppBar>
   )
 }
 
-const mapStateToProps = state => ({
-  authenticated: state.auth.authenticated,
-  user: state.auth.user
-})
-
-const mapActionsToProps = {
-  doSignOutUser
-}
-
-export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Navbar));
+export default withStyles(styles)(Navbar);
