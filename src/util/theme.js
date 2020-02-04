@@ -55,6 +55,9 @@ export default {
       margin: '15px auto',
       width: 'fit-content'
     },
+    searchField: {
+      margin: '5px 0'
+    },
     selectField: {
       minWidth: 175,
       margin: '25px auto'

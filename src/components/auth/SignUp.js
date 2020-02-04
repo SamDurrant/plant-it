@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import withStyles from '@material-ui/core/styles/withStyles';
 import { Redirect } from 'react-router-dom';
 
+// Context items
 import { authContext } from '../../contexts/AuthContext';
 
 // MUI items

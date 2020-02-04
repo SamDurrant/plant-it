@@ -1,6 +1,8 @@
 import React from 'react';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import * as ROUTES from './util/routes';
+
+// Context items
 import AuthProvider from './contexts/AuthContext';
 
 // MUI items
