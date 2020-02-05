@@ -13,6 +13,14 @@ export default {
       contrastText: '#eee'
     }
   },
+  overrides: {
+    MuiTablePagination: {
+      root: {
+        width: 'fit-content',
+        margin: '0 auto'
+      },
+    },
+  },
   spreadThis: {
     typography: {
       useNextVariants: true
